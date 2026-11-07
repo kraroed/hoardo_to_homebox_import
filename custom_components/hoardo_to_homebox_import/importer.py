@@ -16,7 +16,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def _to_jpeg(data: bytes) -> bytes:
-    from PIL import Image  # bundled with Home Assistant
+    from PIL import Image
 
     img = Image.open(io.BytesIO(data)).convert("RGB")
     buf = io.BytesIO()
@@ -25,10 +25,13 @@ def _to_jpeg(data: bytes) -> bytes:
 
 
 def _walk(nodes: list[dict], parent: str | None, out: dict) -> None:
+    """Index location-tree nodes; /entities/tree returns locations by default."""
     for node in nodes:
-        if node.get("type", "location") == "location":
-            out[(parent, node["name"])] = node["id"]
-            _walk(node.get("children") or [], node["id"], out)
+        node_id = node.get("id")
+        name = node.get("name")
+        if node_id and name:
+            out[(parent, name)] = node_id
+            _walk(node.get("children") or [], node_id, out)
 
 
 async def async_import(
@@ -77,19 +80,19 @@ async def async_import(
         )
         try:
             qty = int(float(row.get("Quantity") or 1))
-        except ValueError:
+        except (ValueError, TypeError):
             qty = 1
         try:
             loc_id = await location([room] + ([label] if label else []))
             item_id = await client.create_item(name[:255], qty, notes[:1000], loc_id)
-            done[key] = item_id  # item exists now; record before the photo so a retry won't duplicate it
+            done[key] = item_id
             await store.async_save({"done": done})
             if photo:
                 raw = await client.download(photo)
                 fname = f"{name[:60]}.jpg"
                 try:
                     content, ctype = await hass.async_add_executor_job(_to_jpeg, raw), "image/jpeg"
-                except Exception:  # noqa: BLE001 - e.g. Pillow without AVIF support
+                except Exception:  # noqa: BLE001 - Pillow may not support AVIF
                     _LOGGER.warning("Could not convert photo for %s; uploading original", name)
                     result["photo_fallbacks"] += 1
                     content, ctype, fname = raw, "image/avif", f"{name[:60]}.avif"
