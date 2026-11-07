@@ -1,6 +1,9 @@
 {
   "domain": "hoardo_to_homebox_import",
   "name": "Hoardo to Homebox Import",
+  "categories": [
+    "diy_makers.web_data_connectors"
+  ],
   "codeowners": [
     "@kraroed"
   ],
@@ -9,12 +12,9 @@
     "file_upload",
     "persistent_notification"
   ],
-  "categories": [
-    "diy_makers.web_data_connectors"
-  ],
+  "documentation": "https://github.com/kraroed/hoardo_to_homebox_import",
   "integration_type": "service",
   "iot_class": "local_push",
-  "documentation": "https://github.com/kraroed/hoardo_to_homebox_import",
   "issue_tracker": "https://github.com/kraroed/hoardo_to_homebox_import/issues",
   "requirements": [],
   "version": "0.1.3"
