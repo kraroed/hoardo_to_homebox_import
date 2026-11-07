@@ -1,1 +1,4 @@
-{ "name": "Hoardo Homebox Import", "render_readme": true }
+{
+  "name": "Hoardo to Homebox Import",
+  "render_readme": true
+}
