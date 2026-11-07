@@ -1,0 +1,7 @@
+{
+  "services": {
+    "import_csv": {
+      "service": "mdi:package-down"
+    }
+  }
+}
