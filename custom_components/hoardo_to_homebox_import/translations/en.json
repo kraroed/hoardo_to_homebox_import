@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Connect to Homebox",
-        "description": "Use the address your Home Assistant can reach, e.g. http://homeassistant.local:7745",
+        "description": "Enter the Homebox address that your Home Assistant instance can reach.",
         "data": { "url": "Homebox URL", "username": "Email", "password": "Password" }
       }
     },
