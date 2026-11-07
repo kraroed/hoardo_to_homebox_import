@@ -1,0 +1,17 @@
+import_csv:
+  fields:
+    path:
+      required: true
+      example: /config/hoardo/Family_Room_inventory.csv
+      selector:
+        text:
+    room:
+      required: true
+      example: Family Room
+      selector:
+        text:
+    config_entry_id:
+      required: false
+      selector:
+        config_entry:
+          integration: hoardo_to_homebox_import

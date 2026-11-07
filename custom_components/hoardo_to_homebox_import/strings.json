@@ -1,0 +1,36 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Homebox",
+        "description": "Use the address your Home Assistant can reach, e.g. http://homeassistant.local:7745",
+        "data": { "url": "Homebox URL", "username": "Email", "password": "Password" }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach Homebox at that address.",
+      "invalid_auth": "Homebox rejected the email or password."
+    },
+    "abort": { "already_configured": "This Homebox is already set up." }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Import a Hoardo export",
+        "description": "Choose a Hoardo CSV and the top-level room name to create in Homebox. The import runs in the background and a notification appears when it finishes.",
+        "data": { "file": "Hoardo CSV", "room": "Room name" }
+      }
+    }
+  },
+  "services": {
+    "import_csv": {
+      "name": "Import Hoardo CSV",
+      "description": "Import a Hoardo CSV file (with photos) into Homebox.",
+      "fields": {
+        "path": { "name": "File path", "description": "Path to the CSV, e.g. under /config." },
+        "room": { "name": "Room", "description": "Top-level Homebox location to create the items under." },
+        "config_entry_id": { "name": "Homebox entry", "description": "Only needed if you set up more than one." }
+      }
+    }
+  }
+}
