@@ -1,6 +1,18 @@
 """Regression tests for resumable Hoardo photo imports."""
 import asyncio
+import sys
+from pathlib import Path
+from types import ModuleType
 from unittest.mock import patch
+
+# Load the importer package without executing the Home Assistant integration
+# setup module, which intentionally depends on the full Home Assistant runtime.
+package_name = "custom_components.hoardo_to_homebox_import"
+package = ModuleType(package_name)
+package.__path__ = [
+    str(Path(__file__).parents[1] / "custom_components" / "hoardo_to_homebox_import")
+]
+sys.modules.setdefault(package_name, package)
 
 from custom_components.hoardo_to_homebox_import import importer
 from custom_components.hoardo_to_homebox_import.api import HomeboxError
@@ -106,12 +118,9 @@ def test_original_photo_fallback_uses_detected_content_type_and_extension():
         assert client.attach_calls[0][1] == "Camping lantern.avif"
         assert client.attach_calls[0][3] == "image/avif"
 
-    # A minimal AVIF file-type box is sufficient to exercise format detection.
-    original_download = FakeClient.download
-
     async def avif_download(self, url):
         self.download_calls += 1
-        return b"\x00\x00\x00\x18ftypavif" + b"\x00" * 16
+        return b"\\x00\\x00\\x00\\x18ftypavif" + b"\\x00" * 16
 
     with patch.object(FakeClient, "download", avif_download):
         asyncio.run(scenario())
