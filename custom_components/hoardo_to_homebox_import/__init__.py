@@ -56,10 +56,18 @@ async def run_import(hass: HomeAssistant, entry: ConfigEntry, csv_text: str, roo
             msg = f"Import crashed: {err}"
         else:
             msg = (
-                f"Imported {res['imported']}, already done {res['skipped']}, failed {res['failed']}."
+                f"Imported {res['imported']}, already done {res['skipped']}, "
+                f"failed {res['failed']}."
             )
+            if res["photos_retried"]:
+                msg += f"\nRecovered {res['photos_retried']} previously missing photo(s)."
+            if res["photo_failed"]:
+                msg += f"\nPhoto upload/retry failed for {res['photo_failed']} item(s)."
             if res["photo_fallbacks"]:
-                msg += f"\n{res['photo_fallbacks']} photo(s) uploaded as original AVIF (conversion unavailable)."
+                msg += (
+                    f"\n{res['photo_fallbacks']} photo(s) uploaded in their original format "
+                    "(conversion unavailable)."
+                )
             if res["errors"]:
                 msg += "\n\n" + "\n".join(res["errors"][:10])
         persistent_notification.async_create(
